@@ -1394,7 +1394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cc2cf7c1cccdc744ba52b945686ba0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 2
+  walkSpeed: 4
   maxWalkSpeed: 9
   stepBackDistance: 20
   jumpStrength: 10
@@ -1450,7 +1450,7 @@ Rigidbody:
   m_GameObject: {fileID: 787046960}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 1
+  m_Drag: 5
   m_AngularDrag: 100
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}

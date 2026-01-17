@@ -29,14 +29,10 @@ public class PlayerBaseMovement : PlayerState
 
     public override void SwitchPlayerState()
     {
-        Debug.Log("1");
         MeshRenderer renderer = characterModel.GetComponent<MeshRenderer>();
         renderer.material = controller.f_mat;
 
-        camController.CenterMouse();
-
-        camController.xRotAnchor = 0;
-        camController.yRotAnchor = 0;
+        CameraManager.SetFlight();
 
         controller._fm.enabled = true;
         controller._pbm.enabled = false;
@@ -88,11 +84,6 @@ public class PlayerBaseMovement : PlayerState
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             SwitchPlayerState();
-        }
-
-        if (groundedCheck.isColliding)
-        {
-            
         }
     }
 

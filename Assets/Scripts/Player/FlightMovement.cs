@@ -26,6 +26,8 @@ public class FlightMovement : PlayerState
         MeshRenderer renderer = characterModel.GetComponent<MeshRenderer>();
         renderer.material = controller.g_mat;
 
+        CameraManager.SetGround();
+
         controller._pbm.enabled = true;
         controller._fm.enabled = false;
     }

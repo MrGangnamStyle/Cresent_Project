@@ -35,6 +35,8 @@ public class CameraController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         CurrentState.state = CurrentState.States.Grounded;
+
+        CameraManager.Initialize(this);
     }
 
     private void Update()
@@ -102,4 +104,29 @@ public class CameraController : MonoBehaviour
         Mouse.current.WarpCursorPosition(center);
         InputState.Change(Mouse.current.position, center);
     }
+    public void SetToGroundMode()
+    {
+
+    }
+    public void SetToFlightMode()
+    {
+        CenterMouse();
+
+        xRotAnchor = 0;
+        yRotAnchor = 0;
+    }
+}
+
+public static class CameraManager
+{
+    static CameraController cameraController 
+    {
+        get { return cameraController; }
+        set { if (isInitialized == false) cameraController = value; } 
+    }
+    static bool isInitialized = false;
+
+    public static void Initialize(CameraController cc) { cameraController = cc; isInitialized = true; }
+    public static void SetGround() => cameraController.SetToGroundMode();
+    public static void SetFlight() => cameraController.SetToFlightMode();
 }
