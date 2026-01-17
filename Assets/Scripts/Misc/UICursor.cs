@@ -1,3 +1,4 @@
+using CresentProject.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,9 +14,19 @@ namespace CresentProject.Misc
         }
 
         // Update is called once per frame
-        void LateUpdate()
+        void Update()
         {
-            cursorImage.position = Input.mousePosition; // follow mouse
+            switch (CurrentState.state)
+            {
+                case CurrentState.States.Grounded:
+                    cursorImage.position = Input.mousePosition; // follow mouse
+                    cursorImage.gameObject.SetActive(false);
+                    break;
+                case CurrentState.States.Flying:
+                    cursorImage.position = Input.mousePosition; // follow mouse
+                    cursorImage.gameObject.SetActive(true);
+                    break;
+            }
         }
     }
 }

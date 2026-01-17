@@ -43,27 +43,23 @@ namespace CresentProject.Player
 
         private void Update()
         {
-            Debug.Log("Mouse X : " + mouseX);
-            Debug.Log("Mouse Y : " + mouseY);
+            //Debug.Log("Mouse X : " + mouseX);
+            //Debug.Log("Mouse Y : " + mouseY);
             mouseX = Input.GetAxisRaw("Mouse X") * sensX;
             mouseY = Input.GetAxisRaw("Mouse Y") * sensY;
 
             holder.position = playerTransform.position;
 
+            xRotHolder -= mouseY;
+            yRotHolder += mouseX;
+
+            //holder.rotation = Quaternion.Euler(xRotHolder, yRotHolder, 0);
             switch (CurrentState.state)
             {
                 case CurrentState.States.Grounded:
-                    xRotHolder -= mouseY;
-                    yRotHolder += mouseX;
-
+                    xRotHolder = Mathf.Clamp(xRotHolder, -maxFlightRotation, maxFlightRotation);
                     holder.rotation = Quaternion.Euler(xRotHolder, yRotHolder, 0);
-                    anchor.localRotation = Quaternion.Euler(0, 0, 0);
 
-                    sensX = xSensitivity;
-                    sensY = ySensitivity;
-
-                    lastX = xRotHolder;
-                    lastY = yRotHolder;
                     Debug.Log("States.Grounded");
                     break;
                 case CurrentState.States.Flying:
@@ -72,34 +68,32 @@ namespace CresentProject.Player
 
                     anchor.localRotation = Quaternion.Euler(xRotAnchor, yRotAnchor, 0);
                     // Clamp rotation
-                    xRotAnchor = Mathf.Clamp(xRotAnchor, lastX - maxFlightRotation, lastX + maxFlightRotation);
-                    yRotAnchor = Mathf.Clamp(yRotAnchor, lastY - maxFlightRotation, lastY + maxFlightRotation);
+                    xRotAnchor = Mathf.Clamp(xRotAnchor, -maxFlightRotation, maxFlightRotation);
+                    yRotAnchor = Mathf.Clamp(yRotAnchor, -maxFlightRotation, maxFlightRotation);
 
                     // --- Compute proximity to clamp edges ---
-                    float xT = Mathf.InverseLerp(lastX - maxFlightRotation, lastX + maxFlightRotation, xRotHolder);
-                    float yT = Mathf.InverseLerp(lastY - maxFlightRotation, lastY + maxFlightRotation, yRotHolder);
+                    float xT = Mathf.InverseLerp(-maxFlightRotation, maxFlightRotation, xRotAnchor);
+                    float yT = Mathf.InverseLerp(-maxFlightRotation, maxFlightRotation, yRotAnchor);
 
                     float edgeProximity = Mathf.Max(Mathf.Abs(xT - 0.5f), Mathf.Abs(yT - 0.5f)) * 2f; // 0=center, 1=edge
                     float edgeProximityX = (xT - 0.5f) * 2f; // 0=center, 1=edge
                     float edgeProximityY = (yT - 0.5f) * 2f; // 0=center, 1=edge
 
-                    sensX = Mathf.Lerp(0f, xSensitivity, 1f - edgeProximity);
-                    sensY = Mathf.Lerp(0f, ySensitivity, 1f - edgeProximity);
+                    sensX = SetCameraSlowness(edgeProximity, xSensitivity, sensX);
+                    sensY = SetCameraSlowness(edgeProximity, xSensitivity, sensY);
 
-                    //TurnCameraOnFlight(edgeProximityX, edgeProximityY);
-
-                    Debug.Log($"States.Flying | SensX: {sensX:F2}");
+                    //Debug.Log($"States.Flying | SensX: {sensX:F2}");
                     break;
-            }
+            }   
         }
 
-        private void TurnCameraOnFlight(float x, float y)
+        private float SetCameraSlowness(float edgeProx, float sens, float curSens)
         {
-            double holderX = (double)x;
-            double holderY = (double)y;
-
-            holder.localEulerAngles += new Vector3((float)holderX * 0.75f, (float)holderY * 0.75f, 0);
+            float result = Mathf.Lerp(sens / 10f, sens, 1f - edgeProx);
+            if (result < curSens) { Debug.Log("Lesser"); return result; }
+            else { Debug.Log("Greater"); return sens; }
         }
+
         public void CenterMouse()
         {
             Vector2 center = new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -108,7 +102,10 @@ namespace CresentProject.Player
         }
         public void SetToGroundMode()
         {
+            anchor.localRotation = Quaternion.Euler(0, 0, 0);
 
+            sensX = xSensitivity;
+            sensY = ySensitivity;
         }
         public void SetToFlightMode()
         {
@@ -121,14 +118,9 @@ namespace CresentProject.Player
 
     public static class CameraManager
     {
-        static CameraController cameraController
-        {
-            get { return cameraController; }
-            set { if (isInitialized == false) cameraController = value; }
-        }
-        static bool isInitialized = false;
+        static CameraController cameraController { get; set; }
 
-        public static void Initialize(CameraController cc) { cameraController = cc; isInitialized = true; }
+        public static void Initialize(CameraController cc) { cameraController = cc; }
         public static void SetGround() => cameraController.SetToGroundMode();
         public static void SetFlight() => cameraController.SetToFlightMode();
     }

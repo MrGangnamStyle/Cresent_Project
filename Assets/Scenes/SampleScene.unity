@@ -303,7 +303,7 @@ MonoBehaviour:
   g_mat: {fileID: 2100000, guid: 15d3d430d5d98c3468d4548adda3cac4, type: 2}
   _pbm: {fileID: 787046961}
   _fm: {fileID: 787046967}
-  _cc: {fileID: 0}
+  _cc: {fileID: 330585548}
 --- !u!1 &269441010
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,8 +487,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 029b6af02252be94f8a3ec3f643babec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSensitivity: 10
-  ySensitivity: 10
+  xSensitivity: 3
+  ySensitivity: 3
   holder: {fileID: 2097231801}
   anchor: {fileID: 687031183}
   playerTransform: {fileID: 787046965}

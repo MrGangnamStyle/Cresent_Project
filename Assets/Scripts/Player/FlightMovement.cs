@@ -67,7 +67,7 @@ namespace CresentProject.Player
             Vector3 walkVel = Vector3.Scale(playerRB.linearVelocity, new Vector3(1f, 0f, 1f));
             if (walkVel.magnitude > 0.01f) RotateCharacterOnMovement();
 
-            Debug.Log(playerRB.angularVelocity);
+            //Debug.Log(playerRB.angularVelocity);
         }
 
         private Vector3 MovementInput()
@@ -76,7 +76,6 @@ namespace CresentProject.Player
             zMove = (Input.GetKey(KeyCode.W) ? 1 : 0) - (Input.GetKey(KeyCode.S) ? 1 : 0);
 
             // Get yaw (ignore camera pitch & roll)
-            float yaw = camController.holder.eulerAngles.y;
             Quaternion yawRotation = camController.transform.rotation;
 
             // Input direction relative to camera
